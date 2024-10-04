@@ -23,3 +23,18 @@ services:
       - "8333:8333"
     volumes:
       - ./docker/data:/data
+  tracker:
+    image: tracker:latest
+    restart: always
+    entrypoint: "./start.sh"
+    depends_on:
+      - postgres
+      - bitcoind
+  tracker_api:
+    image: tracker:latest
+    restart: always
+    command: ["yarn", "start:api:prod"]
+    depends_on:
+      - tracker
+    ports:
+      - "3000:3000"
